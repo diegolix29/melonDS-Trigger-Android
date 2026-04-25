@@ -67,6 +67,11 @@ interface SettingsRepository {
 
     fun areCheatsEnabled(): Boolean
 
+    fun isWifiEnabled(): Boolean
+    fun getNetworkMode(): String
+    fun getNetworkAdapter(): Int
+    fun getMultiplayerInterfaceType(): Int
+
     fun observeTheme(): Flow<Theme>
     fun observeRomIconFiltering(): Flow<RomIconFiltering>
     fun observeRomSearchDirectories(): Flow<Array<Uri>>
