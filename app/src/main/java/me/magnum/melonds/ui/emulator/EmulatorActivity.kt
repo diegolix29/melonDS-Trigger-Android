@@ -484,6 +484,11 @@ class EmulatorActivity : AppCompatActivity() {
                             val settingsIntent = Intent(this@EmulatorActivity, SettingsActivity::class.java)
                             settingsLauncher.launch(settingsIntent)
                         }
+                        EmulatorUiEvent.OpenScreen.MultiplayerScreen -> {
+                            val settingsIntent = Intent(this@EmulatorActivity, SettingsActivity::class.java)
+                            settingsIntent.putExtra(SettingsActivity.KEY_ENTRY_POINT, SettingsActivity.MULTIPLAYER_ENTRY_POINT)
+                            settingsLauncher.launch(settingsIntent)
+                        }
                         is EmulatorUiEvent.ShowPauseMenu -> showPauseMenu(it.pauseMenu)
                         is EmulatorUiEvent.ShowRewindWindow -> showRewindWindow(it.rewindWindow)
                         is EmulatorUiEvent.ShowRomSaveStates -> {

@@ -113,4 +113,42 @@
         <item>rom_dir</item>
         <item>internal_dir</item>
     </string-array>
+
+    <string-array name="network_mode_options">
+        <item>Indirect mode (libslirp, recommended)</item>
+        <item>Direct mode</item>
+    </string-array>
+
+    <string-array name="network_mode_values">
+        <item>indirect</item>
+        <item>direct</item>
+    </string-array>
+
+    <string-array name="network_adapter_options">
+        <item>Default</item>
+        <item>Adapter 1</item>
+        <item>Adapter 2</item>
+        <item>Adapter 3</item>
+    </string-array>
+
+    <string-array name="network_adapter_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="multiplayer_interface_options">
+        <item>Local (working)</item>
+        <item>LAN (working)</item>
+        <item>Netplay (not implemented)</item>
+        <item>Dummy</item>
+    </string-array>
+
+    <string-array name="multiplayer_interface_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>-1</item>
+    </string-array>
 </resources>
