@@ -492,6 +492,22 @@ class SharedPreferencesSettingsRepository(
         return preferences.getBoolean("cheats_enabled", false)
     }
 
+    override fun isWifiEnabled(): Boolean {
+        return preferences.getBoolean("wifi_enabled", false)
+    }
+
+    override fun getNetworkMode(): String {
+        return preferences.getString("network_mode", "indirect") ?: "indirect"
+    }
+
+    override fun getNetworkAdapter(): Int {
+        return preferences.getInt("network_adapter", 0)
+    }
+
+    override fun getMultiplayerInterfaceType(): Int {
+        return preferences.getInt("multiplayer_interface", 0)
+    }
+
     override fun observeRomSearchDirectories(): Flow<Array<Uri>> {
         return getOrCreatePreferenceSharedFlow("rom_search_dirs") {
             getRomSearchDirectories()
