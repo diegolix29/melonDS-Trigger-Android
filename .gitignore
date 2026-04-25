@@ -10,4 +10,6 @@
 .kotlin
 .vs/
 app/out/
-external/
+app/build/
+*.db
+*.vsidx

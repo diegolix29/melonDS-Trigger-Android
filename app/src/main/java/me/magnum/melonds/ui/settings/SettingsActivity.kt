@@ -19,6 +19,7 @@ import me.magnum.melonds.R
 import me.magnum.melonds.databinding.ActivitySettingsBinding
 import me.magnum.melonds.ui.settings.fragments.CustomFirmwarePreferencesFragment
 import me.magnum.melonds.ui.settings.fragments.MainPreferencesFragment
+import me.magnum.melonds.ui.settings.fragments.MultiplayerPreferencesFragment
 
 @AndroidEntryPoint
 class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
@@ -27,6 +28,7 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         const val KEY_ENTRY_POINT = "entry_point"
 
         const val CUSTOM_FIRMWARE_ENTRY_POINT = "custom_firmware_entry_point"
+        const val MULTIPLAYER_ENTRY_POINT = "multiplayer"
     }
 
     private lateinit var binding: ActivitySettingsBinding
@@ -71,6 +73,7 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         if (savedInstanceState == null) {
             val entryPoint = when (intent.extras?.getString(KEY_ENTRY_POINT)) {
                 CUSTOM_FIRMWARE_ENTRY_POINT -> CustomFirmwarePreferencesFragment::class
+                MULTIPLAYER_ENTRY_POINT -> MultiplayerPreferencesFragment::class
                 else -> MainPreferencesFragment::class
             }
 

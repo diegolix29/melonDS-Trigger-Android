@@ -34,10 +34,17 @@
     </item>
 
     <item
+        android:id="@+id/action_multiplayer"
+        android:title="@string/multiplayer"
+        android:icon="@drawable/ic_multiplayer"
+        android:orderInCategory="3"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/action_boot_firmware"
         android:title="@string/action_boot_firmware"
         android:icon="@drawable/ic_firmware"
-        android:orderInCategory="3"
+        android:orderInCategory="4"
         app:showAsAction="ifRoom">
 
         <menu>

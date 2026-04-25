@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">melonDS</string>
+    <string name="app_name">Trigger</string>
 
     <string name="ok">OK</string>
     <string name="yes">Yes</string>
@@ -24,7 +24,7 @@
 
     <string name="version_alpha">Alpha</string>
     <string name="version_beta">Beta</string>
-    <string name="version_nightly">Nightly</string>
+    <string name="version_nightly">Trigger</string>
 
     <string name="console_ds">DS</string>
     <string name="console_dsi">DSi (Experimental)</string>
@@ -187,6 +187,8 @@
     <string name="console_type">Default system</string>
     <string name="internal_firmware_settings">Internal firmware settings</string>
     <string name="internal_firmware_settings_summary">Adjust the settings of the internal firmware.</string>
+    <string name="rtc_time_settings">RTC Time Settings</string>
+    <string name="rtc_time_settings_summary">Change the emulated system time</string>
     <string name="custom_bios_firmware">Custom BIOS and firmware</string>
     <string name="custom_bios_firmware_description">Using a custom BIOS and firmware allows you to launch and navigate in the DS\'s firmware without loading a ROM, just like in a real system</string>
     <string name="bios_directory">DS BIOS directory</string>
@@ -306,6 +308,58 @@
     <string name="error_code_invalid_format">Code format is invalid</string>
     <string name="cheat_deleted">Cheat \"%1$s\" deleted</string>
     <string name="cheat_folder_default_name">My cheats</string>
+
+    <string name="multiplayer">Multiplayer</string>
+    <string name="multiplayer_summary">Configure WiFi and multiplayer settings</string>
+    <string name="wifi_settings">WiFi Settings</string>
+    <string name="wifi_enable">Enable WiFi</string>
+    <string name="wifi_enable_summary">Enable WiFi for online multiplayer and Nintendo Wi-Fi Connection features</string>
+    <string name="network_mode">Network Mode</string>
+    <string name="network_mode_summary">Choose how network traffic is routed</string>
+    <string name="network_adapter">Network Adapter</string>
+    <string name="network_adapter_summary">Select network adapter for direct mode</string>
+    <string name="multiplayer_settings">Multiplayer Settings</string>
+    <string name="multiplayer_interface">Multiplayer Interface</string>
+    <string name="multiplayer_interface_summary">Select multiplayer interface type</string>
+    <string name="multiplayer_info">Multiplayer Information</string>
+    <string name="multiplayer_info_summary">Local multiplayer works automatically. LAN multiplayer is working but needs host/join UI. Netplay is not implemented yet.</string>
+    <string name="multiplayer_local">Local Multiplayer</string>
+    <string name="multiplayer_local_summary">Multiplayer on the same device (working)</string>
+    <string name="multiplayer_lan">LAN Multiplayer</string>
+    <string name="multiplayer_lan_summary">Local network multiplayer (working, needs UI)</string>
+    <string name="multiplayer_netplay">Netplay</string>
+    <string name="multiplayer_netplay_summary">Online multiplayer (not implemented)</string>
+    <string name="lan_host_game">Host LAN Game</string>
+    <string name="lan_host_game_summary">Create a LAN game for others to join</string>
+    <string name="lan_join_game">Join LAN Game</string>
+    <string name="lan_join_game_summary">Find and join available LAN games</string>
+    <string name="player_name">Player Name</string>
+    <string name="enter_player_name">Enter your player name</string>
+    <string name="number_of_players">Number of Players</string>
+    <string name="host_game">Host Game</string>
+    <string name="error_player_name_required">Player name is required</string>
+    <string name="available_games">Available Games</string>
+    <string name="direct_connect">Direct Connect</string>
+    <string name="host_address">Host Address</string>
+    <string name="connect">Connect</string>
+    <string name="join_game">Join Game</string>
+    <string name="error_host_address_required">Host address is required</string>
+    <string name="your_ip_address">Your IP Address (for direct join):</string>
+    <string name="lan_room_status">LAN Room Status</string>
+    <string name="room_name">Room Name:</string>
+    <string name="players_in_room">Players in Room:</string>
+    <string name="host">HOST</string>
+    <string name="leave_room">Leave Room</string>
+
+    <!-- LAN Multiplayer Settings -->
+    <string name="lan_player_name">Player Name</string>
+    <string name="lan_player_name_summary">Your name displayed to other players in LAN games</string>
+    <string name="mp_recv_timeout">Receive Timeout</string>
+    <string name="mp_recv_timeout_summary">Timeout for multiplayer packet reception in milliseconds (default: 1ms)</string>
+    <string name="lan_host_num_players">Default Max Players</string>
+    <string name="lan_host_num_players_summary">Default number of players when hosting a LAN game (2-16)</string>
+    <string name="lan_port">LAN Port</string>
+    <string name="lan_port_summary">Port used for LAN multiplayer connections (default: 7064)</string>
 
     <string name="day">Day</string>
     <string name="month">Month</string>

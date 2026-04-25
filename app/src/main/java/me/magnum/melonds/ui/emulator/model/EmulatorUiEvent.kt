@@ -8,6 +8,7 @@ sealed class EmulatorUiEvent {
     sealed class OpenScreen : EmulatorUiEvent() {
         data object SettingsScreen : OpenScreen()
         data class CheatsScreen(val romInfo: RomInfo) : OpenScreen()
+        data object MultiplayerScreen : OpenScreen()
     }
     data class ShowPauseMenu(val pauseMenu: PauseMenu) : EmulatorUiEvent()
     data class ShowRewindWindow(val rewindWindow: RewindWindow) : EmulatorUiEvent()
