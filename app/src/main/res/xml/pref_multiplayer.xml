@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+            android:title="@string/wifi_settings"
+            app:iconSpaceReserved="false">
+
+        <SwitchPreference
+                android:key="wifi_enabled"
+                android:title="@string/wifi_enable"
+                android:summary="@string/wifi_enable_summary"
+                app:iconSpaceReserved="false"
+                android:defaultValue="false" />
+
+        <ListPreference
+                android:key="network_mode"
+                android:title="@string/network_mode"
+                android:summary="@string/network_mode_summary"
+                app:iconSpaceReserved="false"
+                android:entries="@array/network_mode_options"
+                android:entryValues="@array/network_mode_values"
+                android:defaultValue="indirect"
+                android:dependency="wifi_enabled" />
+
+        <ListPreference
+                android:key="network_adapter"
+                android:title="@string/network_adapter"
+                android:summary="@string/network_adapter_summary"
+                app:iconSpaceReserved="false"
+                android:entries="@array/network_adapter_options"
+                android:entryValues="@array/network_adapter_values"
+                android:defaultValue="0"
+                android:dependency="network_mode" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+            android:title="@string/multiplayer_settings"
+            app:iconSpaceReserved="false">
+
+        <ListPreference
+                android:key="multiplayer_interface"
+                android:title="@string/multiplayer_interface"
+                android:summary="@string/multiplayer_interface_summary"
+                app:iconSpaceReserved="false"
+                android:entries="@array/multiplayer_interface_options"
+                android:entryValues="@array/multiplayer_interface_values"
+                android:defaultValue="0" />
+
+        <Preference
+                android:key="multiplayer_info"
+                android:title="@string/multiplayer_info"
+                android:summary="@string/multiplayer_info_summary"
+                app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+                android:key="lan_player_name"
+                android:title="@string/lan_player_name"
+                android:summary="@string/lan_player_name_summary"
+                android:dialogTitle="@string/lan_player_name"
+                android:inputType="textPersonName"
+                app:iconSpaceReserved="false"
+                android:defaultValue="" />
+
+        <SeekBarPreference
+                android:key="mp_recv_timeout"
+                android:title="@string/mp_recv_timeout"
+                android:summary="@string/mp_recv_timeout_summary"
+                app:iconSpaceReserved="false"
+                android:defaultValue="1"
+                android:min="1"
+                android:max="1000"
+                app:showSeekBarValue="true" />
+
+        <SeekBarPreference
+                android:key="lan_host_num_players"
+                android:title="@string/lan_host_num_players"
+                android:summary="@string/lan_host_num_players_summary"
+                app:iconSpaceReserved="false"
+                android:defaultValue="16"
+                android:min="2"
+                android:max="16"
+                app:showSeekBarValue="true" />
+
+        <EditTextPreference
+                android:key="lan_port"
+                android:title="@string/lan_port"
+                android:summary="@string/lan_port_summary"
+                android:dialogTitle="@string/lan_port"
+                android:inputType="number"
+                app:iconSpaceReserved="false"
+                android:defaultValue="7064" />
+
+        <Preference
+                android:key="lan_host_game"
+                android:title="@string/lan_host_game"
+                android:summary="@string/lan_host_game_summary"
+                app:iconSpaceReserved="false" />
+
+        <Preference
+                android:key="lan_join_game"
+                android:title="@string/lan_join_game"
+                android:summary="@string/lan_join_game_summary"
+                app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

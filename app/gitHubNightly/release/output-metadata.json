@@ -1,0 +1,37 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "me.magnum.melonds.nightly",
+  "variantName": "gitHubNightlyRelease",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 39,
+      "versionName": "2.0.0 GH (NIGHTLY)",
+      "outputFile": "app-gitHub-nightly-release.apk"
+    }
+  ],
+  "elementType": "File",
+  "baselineProfiles": [
+    {
+      "minApi": 28,
+      "maxApi": 30,
+      "baselineProfiles": [
+        "baselineProfiles/1/app-gitHub-nightly-release.dm"
+      ]
+    },
+    {
+      "minApi": 31,
+      "maxApi": 2147483647,
+      "baselineProfiles": [
+        "baselineProfiles/0/app-gitHub-nightly-release.dm"
+      ]
+    }
+  ],
+  "minSdkVersionForDexing": 24
+}

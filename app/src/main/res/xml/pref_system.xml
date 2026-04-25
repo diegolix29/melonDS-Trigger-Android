@@ -45,4 +45,10 @@
             android:title="@string/restore_external_layout"
             app:isPreferenceVisible="false"
             app:iconSpaceReserved="false" />
+
+    <Preference
+            android:key="rtc_time_settings"
+            android:title="@string/rtc_time_settings"
+            android:summary="@string/rtc_time_settings_summary"
+            app:iconSpaceReserved="false" />
 </PreferenceScreen>

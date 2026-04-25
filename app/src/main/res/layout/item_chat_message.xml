@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:background="?android:attr/colorBackground">
+
+    <TextView
+        android:id="@+id/text_chat_sender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Player 0"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/holo_blue_dark"
+        android:layout_marginBottom="4dp" />
+
+    <TextView
+        android:id="@+id/text_chat_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Chat message here"
+        android:textSize="14sp"
+        android:textColor="@android:color/black" />
+
+</LinearLayout>
