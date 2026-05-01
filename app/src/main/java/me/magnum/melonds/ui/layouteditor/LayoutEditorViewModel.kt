@@ -13,9 +13,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import me.magnum.melonds.domain.model.RuntimeBackground
 import me.magnum.melonds.domain.model.layout.BackgroundMode
+import me.magnum.melonds.domain.model.layout.Insets
 import me.magnum.melonds.domain.model.layout.LayoutConfiguration
 import me.magnum.melonds.domain.model.layout.LayoutConfiguration.LayoutOrientation
-import me.magnum.melonds.domain.model.layout.LayoutDisplay
 import me.magnum.melonds.domain.model.layout.LayoutDisplayPair
 import me.magnum.melonds.domain.model.layout.PositionedLayoutComponent
 import me.magnum.melonds.domain.model.layout.ScreenFold
@@ -76,7 +76,6 @@ class LayoutEditorViewModel @Inject constructor(
     }
 
     init {
-        val isExternal = savedStateHandle.get<Boolean>(LayoutEditorActivity.KEY_IS_EXTERNAL) ?: false
         val layoutId = savedStateHandle.get<String?>(LayoutEditorActivity.KEY_LAYOUT_ID)?.let { UUID.fromString(it) }
         if (layoutId != null) {
             viewModelScope.launch {
@@ -137,6 +136,10 @@ class LayoutEditorViewModel @Inject constructor(
 
     fun setCurrentUiSize(width: Int, height: Int) {
         uiLayoutProvider.updateUiSize(width, height)
+    }
+
+    fun setUiInsets(insets: Insets) {
+        uiLayoutProvider.updateUiInsets(insets)
     }
 
     fun setScreenFolds(folds: List<ScreenFold>) {

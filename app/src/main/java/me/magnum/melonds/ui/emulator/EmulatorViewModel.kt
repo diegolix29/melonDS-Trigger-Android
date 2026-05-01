@@ -47,6 +47,7 @@ import me.magnum.melonds.domain.model.emulator.EmulatorSessionUpdateAction
 import me.magnum.melonds.domain.model.emulator.FirmwareLaunchResult
 import me.magnum.melonds.domain.model.emulator.RomLaunchResult
 import me.magnum.melonds.domain.model.layout.BackgroundMode
+import me.magnum.melonds.domain.model.layout.Insets
 import me.magnum.melonds.domain.model.layout.LayoutConfiguration
 import me.magnum.melonds.domain.model.layout.LayoutDisplayPair
 import me.magnum.melonds.domain.model.layout.ScreenFold
@@ -296,6 +297,10 @@ class EmulatorViewModel @Inject constructor(
 
     fun setUiSize(width: Int, height: Int) {
         uiLayoutProvider.updateUiSize(width, height)
+    }
+
+    fun setUiInsets(insets: Insets) {
+        uiLayoutProvider.updateUiInsets(insets)
     }
 
     fun setScreenFolds(folds: List<ScreenFold>) {
