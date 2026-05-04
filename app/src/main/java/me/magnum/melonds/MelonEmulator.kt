@@ -127,6 +127,8 @@ object MelonEmulator {
 
     private external fun onKeyRelease(key: Int)
 
+    external fun takeScreenshot(): Boolean
+
     external fun setFastForwardEnabled(enabled: Boolean)
 
     external fun setMicrophoneEnabled(enabled: Boolean)

@@ -45,6 +45,8 @@ interface EmulatorManager {
 
     suspend fun loadState(saveStateFileUri: Uri): Boolean
 
+    suspend fun takeScreenshot(): Boolean
+
     fun stopEmulator()
 
     fun cleanEmulator()

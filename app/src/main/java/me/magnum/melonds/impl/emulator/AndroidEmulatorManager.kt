@@ -207,6 +207,10 @@ class AndroidEmulatorManager(
         MelonEmulator.loadState(saveStateFileUri)
     }
 
+    override suspend fun takeScreenshot(): Boolean = withContext(Dispatchers.IO) {
+        MelonEmulator.takeScreenshot()
+    }
+
     override fun stopEmulator() {
         MelonEmulator.stopEmulation()
         cameraManager.stopCurrentCameraSource()
