@@ -159,8 +159,6 @@ dependencies {
     implementation(libs.markwon)
     implementation(libs.markwon.imagepicasso)
     implementation(libs.markwon.linkify)
-    implementation(libs.rxjava)
-    implementation(libs.rxjava.android)
     implementation(libs.commons.compress)
     implementation(libs.xz)
 
