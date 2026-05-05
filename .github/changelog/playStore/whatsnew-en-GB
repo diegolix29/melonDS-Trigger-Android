@@ -1,13 +1,5 @@
-2.0.0
-• Update core to melonDS 1.1
-• Add support dual-screen devices
-• Multiple improvements and additions to the RetroAchievements integration
-• Add Rumble Pak support
-• Allow DSiWare titles to be launched directly from the ROM list
-• Allow soft input to be hidden when a controller is connected
-• Reduce audio latency
-• Improve mic sensibility
-• Add Simplified Chinese translation
-• Update Indonesian and Russian translations
-• Fix occasional crashes on Adreno GPUs
-• Minor fixes and improvements
+2.0.1
+• Allow components in custom layouts to be placed within the display cutout area
+• Improve OpenGL renderer performance under most scenarios
+• Update Simplified Chinese translation
+• Multiple crash fixes
