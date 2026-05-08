@@ -9,6 +9,7 @@ set(CORE-LIB ../melonDS-android-lib)
 add_subdirectory(${CORE-LIB} ./melonDS-android-lib)
 include_directories(${CORE-LIB}/src/android)
 include_directories(${CORE-LIB}/src/net/enet/include)
+include_directories(${CORE-LIB}/src/net/external/enet/include)
 
 add_library(
         melonDS-android-frontend
