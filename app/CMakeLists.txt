@@ -6,7 +6,7 @@ add_compile_definitions(MELONDS_GL_HEADER=<GLES3/gl32.h>)
 add_compile_definitions(EGL_EGLEXT_PROTOTYPES)
 
 set(CORE-LIB ../melonDS-android-lib)
-add_subdirectory(${CORE-LIB} ./melonDS-android-lib)
+add_subdirectory(${CORE-LIB})
 include_directories(${CORE-LIB}/src/android)
 include_directories(${CORE-LIB}/src/net/../../../external/enet/include)
 
