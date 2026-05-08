@@ -153,9 +153,25 @@ object LANManager {
 
         return discoveryList.mapNotNull { entry ->
             try {
-                // Format: sessionName|numPlayers|maxPlayers|ipStr (matches desktop)
+                // New format with room info: roomName|numPlayers|maxPlayers|roomCode|hasPassword|ipStr
                 val parts = entry.split("|")
-                if (parts.size >= 4) {
+                if (parts.size >= 6) {
+                    val roomName = parts[0]
+                    val numPlayers = parts[1].toIntOrNull() ?: 0
+                    val maxPlayers = parts[2].toIntOrNull() ?: 0
+                    val roomCode = parts[3]
+                    val hasPassword = parts[4] == "1"
+                    val hostAddress = parts[5]
+
+                    LANGameInfo(
+                        hostName = "$roomName [$roomCode]",
+                        gameName = "Nintendo DS",
+                        playerCount = numPlayers,
+                        maxPlayers = maxPlayers,
+                        hostAddress = hostAddress
+                    )
+                } else if (parts.size >= 4) {
+                    // Legacy format for backward compatibility
                     val sessionName = parts[0]
                     val numPlayers = parts[1].toIntOrNull() ?: 0
                     val maxPlayers = parts[2].toIntOrNull() ?: 0
