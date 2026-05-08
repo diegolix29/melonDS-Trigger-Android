@@ -1,0 +1,4 @@
+C:/Users/Diego Mugetsu/source/melonDS-android-master/melonDS-android/app/out/build/x64-Debug/melonDS-android-lib/CMakeFiles/_CMakeLTOTest-C/bin/CMakeFiles/foo.dir
+C:/Users/Diego Mugetsu/source/melonDS-android-master/melonDS-android/app/out/build/x64-Debug/melonDS-android-lib/CMakeFiles/_CMakeLTOTest-C/bin/CMakeFiles/boo.dir
+C:/Users/Diego Mugetsu/source/melonDS-android-master/melonDS-android/app/out/build/x64-Debug/melonDS-android-lib/CMakeFiles/_CMakeLTOTest-C/bin/CMakeFiles/edit_cache.dir
+C:/Users/Diego Mugetsu/source/melonDS-android-master/melonDS-android/app/out/build/x64-Debug/melonDS-android-lib/CMakeFiles/_CMakeLTOTest-C/bin/CMakeFiles/rebuild_cache.dir
