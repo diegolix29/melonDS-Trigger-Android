@@ -681,6 +681,7 @@ void* emulate(void*)
         delete performanceHintSession;
         performanceHintSession = nullptr;
     }
+    return nullptr;
 }
 
 // LAN Multiplayer JNI Functions
@@ -694,13 +695,6 @@ static inline melonDS::LAN& lan() {
 
 JNIEXPORT jboolean JNICALL
 Java_me_magnum_melonds_ui_multiplayer_LANManager_lanSetMode(JNIEnv *env, jobject thiz) {
-    // If already in LAN mode, clean up discovery socket before MPInterface::Set()
-    // destroys the old instance. The LAN destructor only calls EndSession(), which
-    // skips EndDiscovery() for non-hosts, leaking the UDP socket on port 7063.
-    if (melonDS::MPInterface::GetType() == melonDS::MPInterface_LAN) {
-        lan().EndDiscovery();
-        lan().EndSession();
-    }
     melonDS::MPInterface::Set(melonDS::MPInterface_LAN);
     return melonDS::MPInterface::GetType() == melonDS::MPInterface_LAN ? JNI_TRUE : JNI_FALSE;
 }
@@ -710,34 +704,49 @@ Java_me_magnum_melonds_ui_multiplayer_LANManager_lanSetLocalMode(JNIEnv *env, jo
     melonDS::MPInterface::Set(melonDS::MPInterface_Local);
 }
 
+JNIEXPORT void JNICALL
+Java_me_magnum_melonds_ui_multiplayer_LANManager_lanSetRecvTimeout(JNIEnv *env, jobject thiz, jint timeout) {
+    // Set the multiplayer receive timeout in milliseconds
+    // Default is 25ms, can be adjusted for network conditions
+    if (melonDS::MPInterface::GetType() == melonDS::MPInterface_LAN) {
+        static_cast<LAN*>(&melonDS::MPInterface::Get())->SetRecvTimeout(timeout);
+    }
+}
+
 JNIEXPORT jboolean JNICALL
-Java_me_magnum_melonds_ui_multiplayer_LANManager_lanStartHost(JNIEnv *env, jobject thiz, jstring playerName, jint maxPlayers) {
+Java_me_magnum_melonds_ui_multiplayer_LANManager_lanStartHost(JNIEnv *env, jobject thiz, jstring playerName, jint maxPlayers, jstring roomName, jstring password) {
     if (melonDS::MPInterface::GetType() != melonDS::MPInterface_LAN) return JNI_FALSE;
 
     const char* playerStr = env->GetStringUTFChars(playerName, nullptr);
-    bool result = lan().StartHost(playerStr, maxPlayers);
+    const char* roomStr = env->GetStringUTFChars(roomName, nullptr);
+    const char* passwordStr = password ? env->GetStringUTFChars(password, nullptr) : nullptr;
+    bool result = lan().StartHost(playerStr, maxPlayers, roomStr, passwordStr);
     env->ReleaseStringUTFChars(playerName, playerStr);
+    env->ReleaseStringUTFChars(roomName, roomStr);
+    if (passwordStr) env->ReleaseStringUTFChars(password, passwordStr);
 
     return result ? JNI_TRUE : JNI_FALSE;
 }
 
 JNIEXPORT jboolean JNICALL
-Java_me_magnum_melonds_ui_multiplayer_LANManager_lanStartClient(JNIEnv *env, jobject thiz, jstring playerName, jstring hostAddress) {
+Java_me_magnum_melonds_ui_multiplayer_LANManager_lanStartClient(JNIEnv *env, jobject thiz, jstring playerName, jstring hostAddress, jstring password) {
     if (melonDS::MPInterface::GetType() != melonDS::MPInterface_LAN) return JNI_FALSE;
 
     const char* playerStr = env->GetStringUTFChars(playerName, nullptr);
     const char* hostStr = env->GetStringUTFChars(hostAddress, nullptr);
-    bool result = lan().StartClient(playerStr, hostStr);
+    const char* passwordStr = password ? env->GetStringUTFChars(password, nullptr) : nullptr;
+    bool result = lan().StartClient(playerStr, hostStr, passwordStr);
     env->ReleaseStringUTFChars(playerName, playerStr);
     env->ReleaseStringUTFChars(hostAddress, hostStr);
+    if (passwordStr) env->ReleaseStringUTFChars(password, passwordStr);
 
     return result ? JNI_TRUE : JNI_FALSE;
 }
 
-JNIEXPORT jboolean JNICALL
+JNIEXPORT void JNICALL
 Java_me_magnum_melonds_ui_multiplayer_LANManager_lanStartDiscovery(JNIEnv *env, jobject thiz) {
-    if (melonDS::MPInterface::GetType() != melonDS::MPInterface_LAN) return JNI_FALSE;
-    return lan().StartDiscovery() ? JNI_TRUE : JNI_FALSE;
+    if (melonDS::MPInterface::GetType() != melonDS::MPInterface_LAN) return;
+    lan().StartDiscovery();
 }
 
 JNIEXPORT void JNICALL
@@ -805,9 +814,11 @@ Java_me_magnum_melonds_ui_multiplayer_LANManager_lanGetDiscoveryList(JNIEnv *env
                  (int)((key >> 8) & 0xFF),
                  (int)(key & 0xFF));
 
-        std::string info = std::string(data.SessionName) + "|" +
-                           std::to_string(data.NumPlayers) + "|" +
-                           std::to_string(data.MaxPlayers) + "|" +
+        std::string info = std::string(data.Room.RoomName) + "|" +
+                           std::to_string(data.Room.NumPlayers) + "|" +
+                           std::to_string(data.Room.MaxPlayers) + "|" +
+                           std::string(data.Room.RoomCode) + "|" +
+                           (data.Room.HasPassword ? "1" : "0") + "|" +
                            std::string(ipStr);
         jstring jstr = env->NewStringUTF(info.c_str());
         env->SetObjectArrayElement(result, i++, jstr);
@@ -822,17 +833,26 @@ Java_me_magnum_melonds_ui_multiplayer_LANManager_lanGetPlayerList(JNIEnv *env, j
 
     auto players = lan().GetPlayerList();
     jclass stringClass = env->FindClass("java/lang/String");
-    jobjectArray result = env->NewObjectArray(players.size(), stringClass, nullptr);
+
+    // Filter to only include fully connected players (Host or Client status)
+    // This prevents showing duplicate/empty entries for players still connecting
+    std::vector<melonDS::LAN::Player> activePlayers;
+    for (const auto& player : players) {
+        // Only include players with valid names who are fully connected
+        if ((player.Status == melonDS::LAN::Player_Host || player.Status == melonDS::LAN::Player_Client) &&
+            player.Name[0] != '\0') {
+            activePlayers.push_back(player);
+        }
+    }
+
+    jobjectArray result = env->NewObjectArray(activePlayers.size(), stringClass, nullptr);
 
     int i = 0;
-    for (const auto& player : players) {
+    for (const auto& player : activePlayers) {
         std::string status;
         switch (player.Status) {
-            case melonDS::LAN::Player_None: status = "None"; break;
-            case melonDS::LAN::Player_Client: status = "Client"; break;
             case melonDS::LAN::Player_Host: status = "Host"; break;
-            case melonDS::LAN::Player_Connecting: status = "Connecting"; break;
-            case melonDS::LAN::Player_Disconnected: status = "Disconnected"; break;
+            case melonDS::LAN::Player_Client: status = "Client"; break;
             default: status = "Unknown"; break;
         }
 
@@ -847,6 +867,78 @@ Java_me_magnum_melonds_ui_multiplayer_LANManager_lanGetPlayerList(JNIEnv *env, j
     return result;
 }
 
+JNIEXPORT jobjectArray JNICALL
+Java_me_magnum_melonds_ui_multiplayer_LANManager_lanGetRoomInfo(JNIEnv *env, jobject thiz) {
+    if (melonDS::MPInterface::GetType() != melonDS::MPInterface_LAN) return nullptr;
+
+    auto roomInfo = lan().GetRoomInfo();
+    jclass stringClass = env->FindClass("java/lang/String");
+
+    // Format: roomCode|roomName|gameName|description|hasPassword|numPlayers|maxPlayers|inGame|hostID
+    std::string info = std::string(roomInfo.RoomCode) + "|" +
+                       std::string(roomInfo.RoomName) + "|" +
+                       std::string(roomInfo.GameName) + "|" +
+                       std::string(roomInfo.Description) + "|" +
+                       (roomInfo.HasPassword ? "1" : "0") + "|" +
+                       std::to_string(roomInfo.NumPlayers) + "|" +
+                       std::to_string(roomInfo.MaxPlayers) + "|" +
+                       (roomInfo.InGame ? "1" : "0") + "|" +
+                       std::to_string(roomInfo.HostID);
+
+    jobjectArray result = env->NewObjectArray(1, stringClass, nullptr);
+    jstring jstr = env->NewStringUTF(info.c_str());
+    env->SetObjectArrayElement(result, 0, jstr);
+
+    return result;
+}
+
+JNIEXPORT void JNICALL
+Java_me_magnum_melonds_ui_multiplayer_LANManager_lanSendChatMessage(JNIEnv *env, jobject thiz, jstring message) {
+    if (melonDS::MPInterface::GetType() != melonDS::MPInterface_LAN) return;
+
+    const char* msgStr = env->GetStringUTFChars(message, nullptr);
+    lan().SendChatMessage(msgStr);
+    env->ReleaseStringUTFChars(message, msgStr);
+}
+
+JNIEXPORT jobjectArray JNICALL
+Java_me_magnum_melonds_ui_multiplayer_LANManager_lanGetChatMessages(JNIEnv *env, jobject thiz) {
+    if (melonDS::MPInterface::GetType() != melonDS::MPInterface_LAN) return nullptr;
+
+    auto messages = lan().GetChatMessages();
+    jclass stringClass = env->FindClass("java/lang/String");
+
+    jobjectArray result = env->NewObjectArray(messages.size(), stringClass, nullptr);
+
+    int i = 0;
+    for (const auto& msg : messages) {
+        // Format: senderID|message|timestamp
+        std::string info = std::to_string(msg.SenderID) + "|" +
+                           std::string(msg.Message) + "|" +
+                           std::to_string(msg.Timestamp);
+        jstring jstr = env->NewStringUTF(info.c_str());
+        env->SetObjectArrayElement(result, i++, jstr);
+    }
+
+    return result;
+}
+
+JNIEXPORT jboolean JNICALL
+Java_me_magnum_melonds_ui_multiplayer_LANManager_lanKickPlayer(JNIEnv *env, jobject thiz, jint playerID) {
+    if (melonDS::MPInterface::GetType() != melonDS::MPInterface_LAN) return JNI_FALSE;
+
+    bool result = lan().KickPlayer(playerID);
+    return result ? JNI_TRUE : JNI_FALSE;
+}
+
+JNIEXPORT jboolean JNICALL
+Java_me_magnum_melonds_ui_multiplayer_LANManager_lanBanPlayer(JNIEnv *env, jobject thiz, jint playerID) {
+    if (melonDS::MPInterface::GetType() != melonDS::MPInterface_LAN) return JNI_FALSE;
+
+    bool result = lan().BanPlayer(playerID);
+    return result ? JNI_TRUE : JNI_FALSE;
+}
+
 JNIEXPORT void JNICALL
 Java_me_magnum_melonds_ui_multiplayer_LANManager_lanProcess(JNIEnv *env, jobject thiz) {
     if (melonDS::MPInterface::GetType() == melonDS::MPInterface_LAN) {
@@ -854,4 +946,22 @@ Java_me_magnum_melonds_ui_multiplayer_LANManager_lanProcess(JNIEnv *env, jobject
     }
 }
 
+JNIEXPORT void JNICALL
+Java_me_magnum_melonds_MelonEmulator_setRTCDateTime(JNIEnv* env, jobject thiz, jint year, jint month, jint day, jint hour, jint minute, jint second)
+{
+    MelonDSAndroid::setRTCDateTime(year, month, day, hour, minute, second);
 }
+
+JNIEXPORT void JNICALL
+Java_me_magnum_melonds_MelonEmulator_resetRTCOffset(JNIEnv* env, jobject thiz)
+{
+    MelonDSAndroid::resetRTCOffset();
+}
+
+JNIEXPORT jlong JNICALL
+Java_me_magnum_melonds_MelonEmulator_getCurrentRTCTime(JNIEnv* env, jobject thiz)
+{
+    return MelonDSAndroid::getCurrentRTCTime();
+}
+
+} // extern "C"

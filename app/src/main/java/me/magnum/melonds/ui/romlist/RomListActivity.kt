@@ -189,6 +189,12 @@ class RomListActivity : AppCompatActivity() {
                 viewModel.setRomSorting(SortingMode.RECENTLY_PLAYED)
                 return true
             }
+            R.id.action_multiplayer -> {
+                val intent = Intent(this, SettingsActivity::class.java)
+                intent.putExtra(SettingsActivity.KEY_ENTRY_POINT, SettingsActivity.MULTIPLAYER_ENTRY_POINT)
+                startActivity(intent)
+                return true
+            }
             R.id.action_boot_firmware_ds -> {
                 launchFirmware(ConsoleType.DS)
                 return true

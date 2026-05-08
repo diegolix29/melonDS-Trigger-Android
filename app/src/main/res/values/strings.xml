@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">melonDS</string>
+    <string name="app_name">Trigger</string>
 
     <string name="ok">OK</string>
     <string name="yes">Yes</string>
@@ -24,7 +24,7 @@
 
     <string name="version_alpha">Alpha</string>
     <string name="version_beta">Beta</string>
-    <string name="version_nightly">Nightly</string>
+    <string name="version_nightly">Trigger</string>
 
     <string name="console_ds">DS</string>
     <string name="console_dsi">DSi (Experimental)</string>
@@ -187,6 +187,8 @@
     <string name="console_type">Default system</string>
     <string name="internal_firmware_settings">Internal firmware settings</string>
     <string name="internal_firmware_settings_summary">Adjust the settings of the internal firmware.</string>
+    <string name="rtc_time_settings">RTC Time Settings</string>
+    <string name="rtc_time_settings_summary">Change the emulated system time</string>
     <string name="custom_bios_firmware">Custom BIOS and firmware</string>
     <string name="custom_bios_firmware_description">Using a custom BIOS and firmware allows you to launch and navigate in the DS\'s firmware without loading a ROM, just like in a real system</string>
     <string name="bios_directory">DS BIOS directory</string>
@@ -348,6 +350,16 @@
     <string name="players_in_room">Players in Room:</string>
     <string name="host">HOST</string>
     <string name="leave_room">Leave Room</string>
+
+    <!-- LAN Multiplayer Settings -->
+    <string name="lan_player_name">Player Name</string>
+    <string name="lan_player_name_summary">Your name displayed to other players in LAN games</string>
+    <string name="mp_recv_timeout">Receive Timeout</string>
+    <string name="mp_recv_timeout_summary">Timeout for multiplayer packet reception in milliseconds (default: 1ms)</string>
+    <string name="lan_host_num_players">Default Max Players</string>
+    <string name="lan_host_num_players_summary">Default number of players when hosting a LAN game (2-16)</string>
+    <string name="lan_port">LAN Port</string>
+    <string name="lan_port_summary">Port used for LAN multiplayer connections (default: 7064)</string>
 
     <string name="day">Day</string>
     <string name="month">Month</string>
