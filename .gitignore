@@ -8,3 +8,6 @@
 /captures
 .externalNativeBuild
 .kotlin
+.vs/
+app/out/
+external/
