@@ -720,7 +720,7 @@ Java_me_magnum_melonds_ui_multiplayer_LANManager_lanStartHost(JNIEnv *env, jobje
     const char* playerStr = env->GetStringUTFChars(playerName, nullptr);
     const char* roomStr = env->GetStringUTFChars(roomName, nullptr);
     const char* passwordStr = password ? env->GetStringUTFChars(password, nullptr) : nullptr;
-    bool result = lan().StartHost(playerStr, maxPlayers);
+    bool result = lan().StartHost(playerStr, maxPlayers, roomStr, passwordStr);
     env->ReleaseStringUTFChars(playerName, playerStr);
     env->ReleaseStringUTFChars(roomName, roomStr);
     if (passwordStr) env->ReleaseStringUTFChars(password, passwordStr);
@@ -814,9 +814,9 @@ Java_me_magnum_melonds_ui_multiplayer_LANManager_lanGetDiscoveryList(JNIEnv *env
                  (int)((key >> 8) & 0xFF),
                  (int)(key & 0xFF));
 
-        std::string info = std::string(data.SessionName) + "|" +
-                           std::to_string(data.NumPlayers) + "|" +
-                           std::to_string(data.MaxPlayers) + "|" +
+        std::string info = std::string(data.Room.RoomName) + "|" +
+                           std::to_string(data.Room.NumPlayers) + "|" +
+                           std::to_string(data.Room.MaxPlayers) + "|" +
                            std::string(ipStr);
         jstring jstr = env->NewStringUTF(info.c_str());
         env->SetObjectArrayElement(result, i++, jstr);
