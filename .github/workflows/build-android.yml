@@ -1,0 +1,78 @@
+name: Android
+
+on:
+  push:
+    branches:
+      - master
+      - ci/*
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Check out main repository
+      uses: actions/checkout@v4
+      with:
+        path: main-repo
+        
+    - name: Check out melonDS-android-lib repository
+      uses: actions/checkout@v4
+      with:
+        repository: diegolix29/melonDS-android-lib
+        path: melonDS-android-lib
+        
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Cache Gradle packages
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+          
+    - name: Cache Android dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.android/build-cache
+        key: ${{ runner.os }}-android-${{ hashFiles('**/build.gradle*', '**/gradle.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-android-
+          
+    - name: Set up Android SDK
+      uses: android-actions/setup-android@v3
+      with:
+        api-level: 34
+        build-tools: 34.0.0
+        
+    - name: Set up NDK
+      uses: android-actions/setup-ndk@v3
+      with:
+        ndk: 28.0.13004108
+        
+    - name: Copy lib to main repo structure
+      run: |
+        mkdir -p main-repo/melonDS-android-lib
+        cp -r melonDS-android-lib/* main-repo/melonDS-android-lib/
+        
+    - name: Build Android app
+      run: |
+        cd main-repo
+        ./gradlew assembleGitHubNightlyRelease
+        
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: melonDS-android-nightly
+        path: main-repo/app/build/outputs/apk/GitHubNightly/release/*.apk
