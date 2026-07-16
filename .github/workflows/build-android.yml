@@ -14,16 +14,9 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Check out main repository
+    - name: Check out repository
       uses: actions/checkout@v4
       with:
-        path: main-repo
-        
-    - name: Check out melonDS-android-lib repository
-      uses: actions/checkout@v4
-      with:
-        repository: diegolix29/melonDS-android-lib
-        path: melonDS-android-lib
         submodules: recursive
         
     - name: Set up JDK 17
@@ -62,18 +55,12 @@ jobs:
       with:
         ndk: 28.0.13004108
         
-    - name: Copy lib to main repo structure
-      run: |
-        mkdir -p main-repo/melonDS-android-lib
-        cp -r melonDS-android-lib/* main-repo/melonDS-android-lib/
-        
     - name: Build Android app
       run: |
-        cd main-repo
         ./gradlew assembleGitHubNightlyRelease
         
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: melonDS-android-nightly
-        path: main-repo/app/build/outputs/apk/GitHubNightly/release/*.apk
+        path: app/build/outputs/apk/GitHubNightly/release/*.apk
