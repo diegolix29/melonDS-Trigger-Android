@@ -37,6 +37,7 @@ jobs:
         env:
           MELONDS_KEYSTORE: ${{ secrets.MELONDS_KEYSTORE }}
           MELONDS_KEYSTORE_PASSWORD: ${{ secrets.MELONDS_KEYSTORE_PASSWORD }}
+          MELONDS_KEY_PASSWORD: ${{ secrets.MELONDS_KEY_PASSWORD }}
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
         run: |
           COMMIT=$(git rev-parse --short HEAD)
@@ -47,7 +48,7 @@ jobs:
           echo "MELONDS_KEYSTORE=${{runner.workspace}}/keystore.jks" >> local.properties
           echo "MELONDS_KEYSTORE_PASSWORD=$MELONDS_KEYSTORE_PASSWORD" >> local.properties
           echo "MELONDS_KEY_ALIAS=dlix29" >> local.properties
-          echo "MELONDS_KEY_PASSWORD=$MELONDS_KEYSTORE_PASSWORD" >> local.properties
+          echo "MELONDS_KEY_PASSWORD=$MELONDS_KEY_PASSWORD" >> local.properties
           chmod +x ./gradlew
           ./gradlew :app:assembleGitHubNightlyRelease
           git tag -m "Nightly Release" -f -a nightly-release
