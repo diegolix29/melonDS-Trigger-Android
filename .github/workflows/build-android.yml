@@ -24,6 +24,7 @@ jobs:
       with:
         repository: diegolix29/melonDS-android-lib
         path: melonDS-android-lib
+        submodules: recursive
         
     - name: Set up JDK 17
       uses: actions/setup-java@v3
