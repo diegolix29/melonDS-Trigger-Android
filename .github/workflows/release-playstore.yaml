@@ -3,7 +3,6 @@ name: melonDS Android PlayStore Release
 on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-    if: github.actor == 'rafaelvcaetano'
 
 jobs:
   playstore-release:
