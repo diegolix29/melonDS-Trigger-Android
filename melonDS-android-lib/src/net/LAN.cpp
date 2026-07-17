@@ -923,13 +923,16 @@ void LAN::ProcessHostEvent(ENetEvent& event)
                 enet_peer_send(event.peer, Chan_Cmd, pkt);
 
                 Platform::Mutex_Lock(PlayersMutex);
+                Platform::Mutex_Lock(RoomMutex);
 
                 Players[id].ID = id;
                 Players[id].Status = Player_Connecting;
                 Players[id].Address = event.peer->address.host;
                 event.peer->data = &Players[id];
                 NumPlayers++;
+                CurrentRoom.NumPlayers = NumPlayers;
 
+                Platform::Mutex_Unlock(RoomMutex);
                 Platform::Mutex_Unlock(PlayersMutex);
 
                 RemotePeers[id] = event.peer;
@@ -952,9 +955,16 @@ void LAN::ProcessHostEvent(ENetEvent& event)
             int id = player->ID;
             RemotePeers[id] = nullptr;
 
+            Platform::Mutex_Lock(PlayersMutex);
+            Platform::Mutex_Lock(RoomMutex);
+
             player->ID = 0;
             player->Status = Player_None;
             NumPlayers--;
+            CurrentRoom.NumPlayers = NumPlayers;
+
+            Platform::Mutex_Unlock(RoomMutex);
+            Platform::Mutex_Unlock(PlayersMutex);
 
             // broadcast updated player list
             HostUpdatePlayerList();
@@ -1185,14 +1195,17 @@ void LAN::ProcessClientEvent(ENetEvent& event)
                     if (data[1] > 16) break;
 
                     Platform::Mutex_Lock(PlayersMutex);
+                    Platform::Mutex_Lock(RoomMutex);
 
                     NumPlayers = data[1];
+                    CurrentRoom.NumPlayers = NumPlayers;
                     memcpy(Players, &data[2], sizeof(Players));
                     for (int i = 0; i < 16; i++)
                     {
                         Players[i].Name[31] = '\0';
                     }
 
+                    Platform::Mutex_Unlock(RoomMutex);
                     Platform::Mutex_Unlock(PlayersMutex);
                 }
                 break;
@@ -1255,6 +1268,40 @@ void LAN::ProcessClientEvent(ENetEvent& event)
                     if (!player) break;
 
                     ConnectedBitmask &= ~(1 << player->ID);
+                }
+                break;
+
+            case Cmd_RoomInfo: // host sending room information
+                {
+                    if (event.packet->dataLength != (1+sizeof(RoomInfo))) break;
+
+                    Platform::Mutex_Lock(RoomMutex);
+                    memcpy(&CurrentRoom, &data[1], sizeof(RoomInfo));
+                    Platform::Mutex_Unlock(RoomMutex);
+
+                    Platform::Log(Platform::LogLevel::Info, "LAN: received room info [%s] '%s'\n", CurrentRoom.RoomCode, CurrentRoom.RoomName);
+                }
+                break;
+
+            case Cmd_ChatMessage: // chat message from another player
+                {
+                    if (event.packet->dataLength < 5) break; // cmd(1) + senderID(4) minimum
+
+                    u32 senderID = data[1] | (data[2] << 8) | (data[3] << 16) | (data[4] << 24);
+                    int msgLen = event.packet->dataLength - 5;
+                    if (msgLen > 255) msgLen = 255;
+
+                    Platform::Mutex_Lock(ChatMutex);
+                    ChatMessage msg;
+                    msg.SenderID = senderID;
+                    strncpy(msg.Message, (char*)&data[5], msgLen);
+                    msg.Message[msgLen] = '\0';
+                    msg.Timestamp = (u64)Platform::GetMSCount();
+                    ChatHistory.push_back(msg);
+                    // Keep last 100 messages
+                    if (ChatHistory.size() > 100)
+                        ChatHistory.erase(ChatHistory.begin());
+                    Platform::Mutex_Unlock(ChatMutex);
                 }
                 break;
 

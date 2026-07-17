@@ -9,6 +9,7 @@
 .externalNativeBuild
 .kotlin
 .vs/
+out/
 app/out/
 app/build/
 *.db

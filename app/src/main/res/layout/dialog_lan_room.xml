@@ -116,12 +116,13 @@
 
                 <Button
                     android:id="@+id/button_send_chat"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:minWidth="80dp"
                     android:text="Send"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:backgroundTint="@android:color/holo_blue_dark" />
 
             </LinearLayout>
 

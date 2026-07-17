@@ -871,9 +871,19 @@ Java_me_magnum_melonds_ui_multiplayer_LANManager_lanGetRoomInfo(JNIEnv *env, job
 
     jclass stringClass = env->FindClass("java/lang/String");
 
-    // Return empty info since GetRoomInfo doesn't exist in current LAN implementation
+    // Get actual room info from C++ LAN implementation
+    melonDS::LAN::RoomInfo room = lan().GetRoomInfo();
+
     // Format: roomCode|roomName|gameName|description|hasPassword|numPlayers|maxPlayers|inGame|hostID
-    std::string info = "||||||0|0|0|0";
+    std::string info = std::string(room.RoomCode) + "|" +
+                       std::string(room.RoomName) + "|" +
+                       std::string(room.GameName) + "|" +
+                       std::string(room.Description) + "|" +
+                       (room.HasPassword ? "1" : "0") + "|" +
+                       std::to_string(room.NumPlayers) + "|" +
+                       std::to_string(room.MaxPlayers) + "|" +
+                       (room.InGame ? "1" : "0") + "|" +
+                       std::to_string(room.HostID);
 
     jobjectArray result = env->NewObjectArray(1, stringClass, nullptr);
     jstring jstr = env->NewStringUTF(info.c_str());
@@ -886,16 +896,28 @@ JNIEXPORT void JNICALL
 Java_me_magnum_melonds_ui_multiplayer_LANManager_lanSendChatMessage(JNIEnv *env, jobject thiz, jstring message) {
     if (melonDS::MPInterface::GetType() != melonDS::MPInterface_LAN) return;
 
-    // SendChatMessage doesn't exist in current LAN implementation - no-op
+    const char* msgStr = env->GetStringUTFChars(message, nullptr);
+    lan().SendChatMessage(msgStr);
+    env->ReleaseStringUTFChars(message, msgStr);
 }
 
 JNIEXPORT jobjectArray JNICALL
 Java_me_magnum_melonds_ui_multiplayer_LANManager_lanGetChatMessages(JNIEnv *env, jobject thiz) {
     if (melonDS::MPInterface::GetType() != melonDS::MPInterface_LAN) return nullptr;
 
-    // GetChatMessages doesn't exist in current LAN implementation - return empty array
+    auto chatMessages = lan().GetChatMessages();
     jclass stringClass = env->FindClass("java/lang/String");
-    jobjectArray result = env->NewObjectArray(0, stringClass, nullptr);
+    jobjectArray result = env->NewObjectArray(chatMessages.size(), stringClass, nullptr);
+
+    int i = 0;
+    for (const auto& msg : chatMessages) {
+        // Format: senderID|message|timestamp
+        std::string info = std::to_string(msg.SenderID) + "|" +
+                           std::string(msg.Message) + "|" +
+                           std::to_string(msg.Timestamp);
+        jstring jstr = env->NewStringUTF(info.c_str());
+        env->SetObjectArrayElement(result, i++, jstr);
+    }
 
     return result;
 }
