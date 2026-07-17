@@ -8,6 +8,10 @@ class PlayStoreUpdatesRepository : UpdatesRepository {
         return Result.success(null)
     }
 
+    override suspend fun forceCheckNewUpdate(): Result<AppUpdate?> {
+        return Result.success(null)
+    }
+
     override fun skipUpdate(update: AppUpdate) {
         // Do nothing. Update checking not supported in the Play Store version
     }

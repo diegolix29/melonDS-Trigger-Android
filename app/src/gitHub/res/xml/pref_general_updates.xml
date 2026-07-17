@@ -9,4 +9,10 @@
         android:summary="@string/check_for_updates_summary"
         app:iconSpaceReserved="false"
         android:defaultValue="true" />
+
+    <Preference
+        android:key="github_check_for_updates_now"
+        android:title="@string/check_for_updates_now"
+        android:summary="@string/check_for_updates_now_summary"
+        app:iconSpaceReserved="false" />
 </PreferenceScreen>

@@ -27,6 +27,14 @@ class GitHubNightlyUpdatesRepository(private val api: GitHubApi, private val pre
             return Result.success(null)
         }
 
+        return performUpdateCheck()
+    }
+
+    override suspend fun forceCheckNewUpdate(): Result<AppUpdate?> {
+        return performUpdateCheck()
+    }
+
+    private suspend fun performUpdateCheck(): Result<AppUpdate?> {
         return suspendRunCatching {
             api.getLatestNightlyRelease()
         }.suspendMapCatching { release ->

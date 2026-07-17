@@ -32,6 +32,14 @@ class GitHubProdUpdatesRepository(private val context: Context, private val api:
             return Result.success(null)
         }
 
+        return performUpdateCheck()
+    }
+
+    override suspend fun forceCheckNewUpdate(): Result<AppUpdate?> {
+        return performUpdateCheck()
+    }
+
+    private suspend fun performUpdateCheck(): Result<AppUpdate?> {
         return suspendRunCatching {
             api.getLatestRelease()
         }.suspendMapCatching { release ->
